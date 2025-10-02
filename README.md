@@ -4,7 +4,7 @@
 ---
 
 <p align="center">
-<img src="images/bommel1.png" alt="BTOP" width="120" height="120"/>  
+<img src="/bommel1.png" alt="BTOP" width="120" height="120"/>  
 </p>
 
 ---
