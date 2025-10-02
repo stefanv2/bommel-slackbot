@@ -24,58 +24,91 @@ Een simpele, Docker-gebaseerde Slack-bot die elke dag een legendarische uitspraa
 
 ---
 
-## 🚀 Installatie
+Bommel Quote Bot
 
-### 1. Clone de repo
+Een Slack-bot die elke dag een uitspraak van Heer Bommel post, en via /bommel een quote on-demand kan geven.
 
-```bash
-git clone https://github.com/jouw-gebruikernaam/cruijff-quote-bot.git
-cd cruijff-quote-bot
+🚀 Installatie
+
+Clone de repository
+
+git clone https://github.com/jouw-gebruikernaam/bommel-quote-bot.git
+cd bommel-quote-bot
 
 
-2. Maak een .env bestand
+Maak een .env bestand
+
 SLACK_BOT_TOKEN=xoxb-...
 SLACK_CHANNEL_ID=C012ABC345D
 
-3. Build en run de container
-docker build -t cruijff-slackbot .
-docker run --env-file .env -d --name cruijff-bot cruijff-slackbot
+
+Build en run de container
+
+docker build -t bommel-slackbot .
+docker run --env-file .env -d --name bommel-bot -p 3002:3002 bommel-slackbot
 
 🕰️ Tijdzone instellen
-A) In de Dockerfile:
+
+A) In de Dockerfile
+
 ENV TZ=Europe/Amsterdam
 RUN apk add --no-cache tzdata
 
-B) Of bij het runnen:
+
+B) Of bij het runnen
+
 -v /etc/localtime:/etc/localtime:ro
 
 ✏️ Aanpassen
+Quotes toevoegen
 
-Quotes toevoegen:
+Quotes staan in bommel-quotes.json.
+Voorbeeld:
 
-Pas het bestand quotes.js aan:
-module.exports = [
-  "Elk nadeel heb z’n voordeel.",
-  "Voetbal is simpel. Maar simpel voetballen is het moeilijkste wat er is.",
-  // ...meer quotes
-];
+[
+  "Als je begrijpt wat ik bedoel.",
+  "Tom Poes, verzin een list!",
+  "Ik wilde gewoon een rustige dag. Is dat te veel gevraagd?",
+  "Ach jonge vriend, vroeger was alles simpeler — en duurder."
+]
 
-Cron aanpassen (in index.js):
+Cron aanpassen
 
-// Elke maandag om 09:00 (Europe/Amsterdam)
+In bommel.js wordt de posting-tijd ingesteld.
+Voorbeeld: elke dag om 09:00 (Europe/Amsterdam):
+
+cron.schedule('0 9 * * *', async () => {
+  ...
+}, { timezone: 'Europe/Amsterdam' });
+
+
+Alleen maandagochtend om 09:00:
+
 cron.schedule('0 9 * * 1', async () => {
   ...
-});
+}, { timezone: 'Europe/Amsterdam' });
 
 🧪 Testen
-Test handmatig een quote:
 
-docker exec -it cruijff-bot node
-> const quotes = require('./quotes'); quotes[Math.floor(Math.random() * quotes.length)];
+Handmatig een quote testen binnen de container:
+
+docker exec -it bommel-bot node
+> const quotes = require('./bommel-quotes.json'); 
+> quotes[Math.floor(Math.random() * quotes.length)];
+
+
+Test het Slack-slash command:
+
+curl -X POST http://localhost:3002/slack/bommel \
+  -H "Content-Type: application/json" \
+  -d '{"text":"test"}'
 
 📄 Licentie
-MIT – Vrij te gebruiken en aan te passen. Quotes van Johan Cruijff zijn cultureel erfgoed 😉.
+
+MIT – Vrij te gebruiken en aan te passen.
+Quotes van Heer Bommel zijn cultureel erfgoed 😉
 
 📫 Contact
+
 Gebouwd door Stefan. Ideeën of uitbreidingen? PR’s welkom!
 
