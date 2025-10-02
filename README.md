@@ -1,4 +1,4 @@
-# 🟠 Cruijff Quote Slack Bot
+# 🟠 Olivier B. Bommel Quote Slack Bot
 
 
 ---
@@ -9,9 +9,9 @@
 
 ---
 
-Een simpele, Docker-gebaseerde Slack-bot die elke week een legendarische uitspraak van Johan Cruijff post in een Slack-kanaal. Ideaal voor wat voetbalwijsheid, humor of inspiratie op de werkvloer.
+Een simpele, Docker-gebaseerde Slack-bot die elke dag een legendarische uitspraak van Olivier B. Bommel post in een Slack-kanaal. Ideaal voor humor of inspiratie op de werkvloer.
 
-> "Je gaat het pas zien als je het doorhebt." – Johan Cruijff
+> "Heer Bommel zegt: "Tom Poes, verzin een list!" 
 
 ---
 
