@@ -75,16 +75,16 @@ Voorbeeld:
 Cron aanpassen
 
 In bommel.js wordt de posting-tijd ingesteld.
-Voorbeeld: elke dag om 09:00 (Europe/Amsterdam):
+Voorbeeld: elke dag om 09:30 (Europe/Amsterdam):
 
-cron.schedule('0 9 * * *', async () => {
+cron.schedule('30 9 * * *', async () => {
   ...
 }, { timezone: 'Europe/Amsterdam' });
 
 
-Alleen maandagochtend om 09:00:
+Alleen maandagochtend om 09:30:00am
 
-cron.schedule('0 9 * * 1', async () => {
+cron.schedule('30 9 * * 1', async () => {
   ...
 }, { timezone: 'Europe/Amsterdam' });
 
