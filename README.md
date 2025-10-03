@@ -17,7 +17,7 @@ Een simpele, Docker-gebaseerde Slack-bot die elke dag een legendarische uitspraa
 
 ## ⚙️ Functionaliteit
 
-- ✅ Post wekelijks (standaard: elke maandag om 09:00) een willekeurige Cruijff-quote
+- ✅ Post dagelijks een willekeurige Bommel-quote
 - ✅ Slack-integratie met gebruik van `xoxb-` bot token
 - ✅ Eenvoudig te draaien in een Docker-container
 - ✅ Aanpasbare quotes en tijdstip via code of cron
