@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors'); // ✅ CORS module
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const cron = require('node-cron');
@@ -7,85 +8,83 @@ const { WebClient } = require('@slack/web-api');
 require('dotenv').config();
 
 const app = express();
+
+// ✅ CORS inschakelen voor alle domeinen (mag later strenger)
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST']
+}));
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// ✅ Quotes laden
 const quotes = JSON.parse(fs.readFileSync('bommel-quotes.json', 'utf8'));
 
 function getRandomQuote() {
   return quotes[Math.floor(Math.random() * quotes.length)];
 }
 
-// Slack client
-const token = process.env.SLACK_BOT_TOKEN;     // xoxb-...
-const channel = process.env.SLACK_CHANNEL_ID; // bv. C0123456789
+// ✅ Slack client
+const token = process.env.SLACK_BOT_TOKEN;
+const channel = process.env.SLACK_CHANNEL_ID;
 const slack = new WebClient(token);
 
-// ---- Slash command: /bommel
+// ✅ API endpoint — jouw dashboard gebruikt dit
+app.get('/quote', (req, res) => {
+  const quote = getRandomQuote();
+  res.json({
+    quote: quote,
+    author: 'Heer Bommel'
+  });
+});
+
+// ✅ Slack slash command /bommel
 app.post('/slack/bommel', async (req, res) => {
   const quote = getRandomQuote();
 
-  // Direct antwoord in Slack (in-channel)
   res.json({
     response_type: 'in_channel',
     blocks: [
       {
         type: "section",
-        text: {
-          type: "mrkdwn",
-          text: "*📜 Quote van Heer Bommel*"
-        }
+        text: { type: "mrkdwn", text: "*📜 Quote van Heer Bommel*" }
       },
       {
         type: "section",
-        text: {
-          type: "mrkdwn",
-          text: `_${quote}_`
-        }
+        text: { type: "mrkdwn", text: `_${quote}_` }
       },
       {
         type: "context",
         elements: [
-          {
-            type: "mrkdwn",
-            text: ":scroll: Cultureel erfgoed – Tom Poes & Heer Bommel"
-          }
+          { type: "mrkdwn", text: ":scroll: Cultureel erfgoed – Tom Poes & Heer Bommel" }
         ]
       }
     ]
   });
 });
 
-// ---- Dagelijks schema: 09:30 Europe/Amsterdam
+// ✅ Automatische dagelijkse Slack-post (09:30)
 cron.schedule('30 09 * * *', async () => {
   try {
     const quote = getRandomQuote();
 
     await slack.chat.postMessage({
       channel,
-      text: `🧱 Heer Bommel zegt: "${quote}"`, // fallback
+      text: `🧱 Heer Bommel zegt: "${quote}"`,
       blocks: [
         {
           type: "section",
-          text: {
-            type: "mrkdwn",
-            text: "*📜 Quote van Heer Bommel*"
-          }
+          text: { type: "mrkdwn", text: "*📜 Quote van Heer Bommel*" }
         },
         {
           type: "section",
-          text: {
-            type: "mrkdwn",
-            text: `_${quote}_`
-          }
+          text: { type: "mrkdwn", text: `_${quote}_` }
         },
         {
           type: "context",
           elements: [
-            {
-              type: "mrkdwn",
-              text: ":scroll: Cultureel erfgoed – Tom Poes & Heer Bommel"
-            }
+            { type: "mrkdwn", text: ":scroll: Cultureel erfgoed – Tom Poes & Heer Bommel" }
           ]
         }
       ]
@@ -97,12 +96,12 @@ cron.schedule('30 09 * * *', async () => {
   }
 }, { timezone: 'Europe/Amsterdam' });
 
-// Healthcheck
+// ✅ Health check endpoint
 app.get('/', (_req, res) => res.send('Bommel bot is alive'));
 
-// Start server
+// ✅ Luister op alle netwerkinterfaces
 const port = process.env.PORT || 3002;
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`🚀 Bommel Slackbot draait op poort ${port}`);
 });
 
